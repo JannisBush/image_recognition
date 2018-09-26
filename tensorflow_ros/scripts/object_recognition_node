@@ -6,6 +6,7 @@ import sys
 
 # ROS
 import rospy
+import cv2
 
 # OpenCV
 from cv_bridge import CvBridge, CvBridgeError
@@ -52,7 +53,7 @@ class TensorflowObjectRecognition:
             error_msg = "Could not convert to opencv image: %s" % e
             rospy.logerr(error_msg)
             raise Exception(error_msg)
-
+           
         # Write raw image
         if self._save_images_folder:
             image_writer.write_raw(self._save_images_folder, self._bgr_image)
@@ -79,7 +80,8 @@ class TensorflowObjectRecognition:
 
             # Write unverified annotated image
             if self._save_images_folder:
-                image_writer.write_annotated(self._save_images_folder, self._bgr_image, best_label, False)
+                if best_prob > 0.8:
+                    image_writer.write_annotated(self._save_images_folder, self._bgr_image, best_label, False)
                 image_writer.write_estimation(self._save_images_folder, self._bgr_image, best_label,
                                               suffix="_object_recognition")
 

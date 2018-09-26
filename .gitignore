@@ -90,3 +90,6 @@ ENV/
 
 # Pycharm
 .idea
+
+# Images
+image_recognition_util/images/annotated

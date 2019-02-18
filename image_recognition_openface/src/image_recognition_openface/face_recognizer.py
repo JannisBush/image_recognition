@@ -210,7 +210,8 @@ class FaceRecognizer:
         self._trained_faces = []
 
     def save_trained_faces(self, file_name):
-        pickle.dump(self._trained_faces, file_name)
+	with open(file_name, "w+") as f:
+            pickle.dump(self._trained_faces, f)
 
     def restore_trained_faces(self, file_name):
         with open(file_name) as f:

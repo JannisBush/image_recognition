@@ -3,7 +3,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 CMakeLists.txt.user
-
+image_recognition_util/images/annotated
 # C extensions
 *.so
 

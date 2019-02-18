@@ -1,4 +1,4 @@
-from face_client import FaceClient
+from .face_client import FaceClient
 import cv2
 from timeout import Timeout
 
@@ -28,10 +28,19 @@ class SkyFaceProperties:
         self.glasses = Attribute()
         self.lips = Attribute()
         self.mood = Attribute()
+	self.dark_glasses = Attribute()
+	self.smiling = Attribute()
+	self.neutral_mood = Attribute()
+	self.anger = Attribute()
+	self.disgust = Attribute()
+	self.fear = Attribute()
+	self.happiness = Attribute()
+	self.sadness = Attribute()
+	self.surprise = Attribute()
 
     def __repr__(self):
-        return "FaceProperties(age=%s, eyes=%s, gender=%s, glasses=%s, lips=%s, mood=%s)" % (
-            self.age_est, self.eyes, self.gender, self.glasses, self.lips, self.mood
+        return "FaceProperties(age=%s, eyes=%s, gender=%s, glasses=%s, lips=%s, mood=%s, sunglasses=%s, smiling=%s, Mood: neutral=%s, anger=%s, disgust=%s, fear=%s, happiness=%s, sadness=%s, surprise=%s)" % (
+            self.age_est, self.eyes, self.gender, self.glasses, self.lips, self.mood, self.dark_glasses, self.smiling, self.neutral_mood, self.anger, self.disgust, self.fear, self.happiness, self.sadness, self.surprise
         )
 
 
@@ -84,5 +93,5 @@ class Skybiometry:
                 if hasattr(fp, name):
                     setattr(fp, name, Attribute(attr["value"], attr["confidence"] / 100.0))
             fps.append(fp)
-
+	print(fps)
         return fps

@@ -41,7 +41,7 @@ class OpenfaceROS:
         self._recognize_srv = rospy.Service('recognize', Recognize, self._recognize_srv)
         self._clear_srv = rospy.Service('clear', Empty, self._clear_srv)
 
-        self._image_subscriber = rospy.Subscriber('image', Image, self._image_callback)
+        self._image_subscriber = rospy.Subscriber('/image', Image, self._image_callback)
         self._recognitions_publisher = rospy.Publisher('recognitions', Recognitions, queue_size=10)
 
         if not self._save_images_folder and (self._topic_save_images or self._service_save_images):
@@ -197,13 +197,13 @@ if __name__ == '__main__':
         topic_publish_result_image = rospy.get_param("~topic_publish_result_image", True)
         service_publish_result_image = rospy.get_param("~service_publish_result_image", True)
 
-        db = rospy.get_param('~db', None)
+        db = rospy.get_param('~db', "~/openface_images/weights.weights")
         if db:
             db = os.path.expanduser(db)
 
         save_images_folder = None
         if save_images:
-            save_images_folder = os.path.expanduser(rospy.get_param("~save_images_folder", "/tmp/openface"))
+            save_images_folder = os.path.expanduser(rospy.get_param("~save_images_folder", "~/openface_images"))
     except KeyError as e:
         rospy.logerr("Parameter %s not found" % e)
         sys.exit(1)
@@ -221,3 +221,5 @@ if __name__ == '__main__':
     rospy.Timer(rospy.Duration(1), lambda event: updater.force_update())
 
     rospy.spin()
+    image_recognition_openface._face_recognizer.save_trained_faces(os.path.expanduser("~/openface_images/weights.weights"))
+

@@ -32,7 +32,7 @@ class TensorflowObjectRecognition:
         self._bridge = CvBridge()
         self._save_images_folder = save_images_folder
 
-        self._recognize_srv = rospy.Service('recognize', Recognize, self._recognize_srv_callback)
+        self._recognize_srv = rospy.Service('object_recognition', Recognize, self._recognize_srv_callback)
 
         rospy.loginfo("TensorflowObjectRecognition initialized")
 

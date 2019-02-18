@@ -7,6 +7,7 @@ from image_recognition_msgs.srv import GetFaceProperties
 from image_recognition_msgs.msg import FaceProperties
 from image_recognition_util import image_writer
 from image_recognition_skybiometry import Skybiometry, SkyFaceProperties
+from sensor_msgs.msg import Image
 
 import os
 import sys
@@ -27,6 +28,11 @@ class SkybiometryFaceProperties:
         self._properties_srv = rospy.Service('get_face_properties', GetFaceProperties, self._get_face_properties_srv)
         self._skybiometry = Skybiometry(key, secret)
         self._api_timeout = timeout
+
+       
+        self._properties_publisher = rospy.Publisher('properties', FaceProperties, queue_size=10)
+	self._image_subscriber = rospy.Subscriber('img_to_face_properties', Image, queue_size=1)
+
 
         if save_images_folder:
             self._save_images_folder = os.path.expanduser(save_images_folder)
@@ -58,10 +64,25 @@ class SkybiometryFaceProperties:
         sky_face_properties_array = self._skybiometry.get_face_properties(bgr_images, self._api_timeout)
 
         face_properties_array = []
+	
         for sky_face_properties in sky_face_properties_array:
+	    print(sky_face_properties.mood.value, sky_face_properties.eyes.value, sky_face_properties.lips.value, type(sky_face_properties.mood.value), type(sky_face_properties.eyes.value), type(sky_face_properties.lips.value))
             face_properties_array.append(FaceProperties(
                 gender=FaceProperties.MALE if sky_face_properties.gender.value == "male" else FaceProperties.FEMALE,
-                age=int(sky_face_properties.age_est.value)
+                age=int(sky_face_properties.age_est.value),
+		glasses= 0 if sky_face_properties.glasses.value == "false" else 1,
+		mood=sky_face_properties.mood.value,
+		lips=sky_face_properties.lips.value,
+		smiling= 0 if sky_face_properties.smiling.value == "false" else 1,
+		sunglasses=0 if sky_face_properties.dark_glasses.value == "false" else 1,
+		eyes=sky_face_properties.eyes.value.encode('ascii','ignore'),
+      		neutral=0 if sky_face_properties.neutral_mood.value == "false" else 1,
+		anger=0 if sky_face_properties.anger.value == "false" else 1,
+		disgust=0 if sky_face_properties.disgust.value == "false" else 1,
+		fear=0 if sky_face_properties.fear.value == "false" else 1,
+		happiness=0 if sky_face_properties.happiness.value == "false" else 1,
+		sadness=0 if sky_face_properties.sadness.value == "false" else 1,
+		surprise=0 if sky_face_properties.surprise.value == "false" else 1
             ))
 
         # Store images if specified
@@ -80,8 +101,8 @@ if __name__ == '__main__':
     rospy.init_node("face_properties")
 
     try:
-        api_key = rospy.get_param("~api_key", "69efefc20c7f42d8af1f2646ce6742ec")
-        api_secret = rospy.get_param("~api_secret", "5fab420ca6cf4ff28e7780efcffadb6c")
+        api_key = rospy.get_param("~api_key", "replace")
+        api_secret = rospy.get_param("~api_secret", "replace")
         api_timeout = rospy.get_param("~api_timeout", 10)
         save_images = rospy.get_param("~save_images", True)
 

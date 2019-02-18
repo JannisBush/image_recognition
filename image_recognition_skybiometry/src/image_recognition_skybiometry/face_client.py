@@ -121,7 +121,7 @@ class FaceClient(object):
         buffer = None
         aggressive = False
         train = None
-        namespace = "robocup"
+        namespace = "pepper"
 
         (facebook_uids, twitter_uids) = self.__check_user_auth_credentials(uids)
 
@@ -363,6 +363,7 @@ class FaceClient(object):
 
         if 'status' in response_data and response_data['status'] == 'failure':
             raise FaceError(response_data['error_code'], response_data['error_message'])
+            
 
         return response_data
 

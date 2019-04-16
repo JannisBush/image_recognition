@@ -99,8 +99,9 @@ class TestPlugin(Plugin):
 
         msg = ""
         for properties in result.properties_array:
-            msg += "- FaceProperties(gender=%s, age=%s)" % \
-                   ("male" if properties.gender == FaceProperties.MALE else "female", properties.age)
+            msg += "- FaceProperties(gender=%s, age=%s, glasses=%s, mood=%s)" % \
+                   ("male" if properties.gender == FaceProperties.MALE else "female", properties.age, 
+		     "false" if properties.glasses == 0 else "true", properties.mood)
 
         info_dialog("Face Properties array", msg)
 
